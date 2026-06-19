@@ -61,6 +61,8 @@ class _MyHomePageState extends State<MyHomePage> {
             ListTile(
               title: const Text('Détails'),
               onTap: () {
+                Navigator.pop(context);
+                Navigator.pop(context);
                 Navigator.push(
                     context,
                     MaterialPageRoute(
