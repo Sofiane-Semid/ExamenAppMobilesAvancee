@@ -6,14 +6,14 @@ class Animal{
 
   Animal({
     required this.nom,
-    required this.continent,
-    required this.famille,
     required this.espece,
+    required this.famille,
+    required this.continent
   });
 
   factory Animal.fromJson(
       Map<String, dynamic> json,
       ){
-    return Animal(nom : json['nom'], continent: json['continent'],famille: json['famille'],espece: json['espece'] );
+    return Animal(nom : json['nom'], espece: json['espece'],famille: json['famille'],continent: json['continent'] );
   }
 }

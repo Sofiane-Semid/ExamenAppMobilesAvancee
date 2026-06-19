@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 import 'class.dart';
 
+
+
 void main() {
   runApp(const MyApp());
 }
@@ -18,7 +20,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Les animaux de mon zoo'),
     );
   }
 }
@@ -34,18 +36,24 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
   // On recupere les données de l'api github et on les affiche dans une liste
-  TextEditingController continent = TextEditingController();
+  TextEditingController contient = TextEditingController();
   TextEditingController famille = TextEditingController();
-  List<Animal> repos = [];
+  List<Animal> animal = [];
 
-  void RechercherAnimaux() async {
+  void RechercherRepos() async {
     try{
-      final response = await Dio().get('http://10.0.2.2:8080/exam/animaux/${continent.text}?famille=${famille.text}');
-      repos = (response.data as List).map((json) => Animal.fromJson(json)).toList();
+      final response = await Dio().get('http://10.0.2.2:8080/exam/animaux/${contient.text}?famille=${famille.text}');
+      animal = (response.data as List).map((json) => Animal.fromJson(json)).toList();
       setState(() {});
     }
     catch(e){
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Utilisateur introuvable' + e.toString())));
+    }
+    if(contient == "Ocean"){
+      contient = Icon(Icons.water) as TextEditingController;
+    }
+    else{
+      contient = Icon(Icons.landscape) as TextEditingController;
     }
 
   }
@@ -60,28 +68,33 @@ class _MyHomePageState extends State<MyHomePage> {
         padding : const EdgeInsets.all(16),
         child: Column(children: [
           TextField(
-            controller: continent,
-            decoration:  const InputDecoration(labelText: 'continent'),
+            controller: contient,
+            decoration:  const InputDecoration(labelText: 'Continent'),
           ),
           TextField(
             controller: famille,
             decoration:  const InputDecoration(labelText: 'Famille'),
           ),
 
-          SizedBox(height: 10),
-          ElevatedButton(onPressed: RechercherAnimaux, child: const Text('Rechercher')),
+          const SizedBox(height: 10),
+          ElevatedButton(onPressed: RechercherRepos, child: const Text('Rechercher')),
           const SizedBox(height: 10),
 
           Expanded(
               child: ListView.builder(
-                  itemCount: repos.length,
+                  itemCount: animal.length,
                   itemBuilder: (context, index){
-                    final repo = repos[index];
+                    final animals = animal[index];
                     return ListTile(
-                      title: Text(repo.nom),
-                      subtitle: Text((repo.continent)),
+                      leading: animals.continent == "Océans"
+                          ? const Icon(Icons.water)
+                          : const Icon(Icons.landscape),
+                      title: Text(animals.nom),
+                      subtitle: Text((animals.espece)),
                     );
                   }
+
+
               ))
         ],),
 
